@@ -71,7 +71,6 @@ const formatHarga = (harga: number): string => {
 export default function Home() {
   return (
     <View style={styles.container}>
-      {/* SEARCH BAR */}
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={20} color="#777" />
 
@@ -86,7 +85,6 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        {/* KATEGORI */}
         <Text style={styles.sectionTitle}>Kategori</Text>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -111,18 +109,15 @@ export default function Home() {
           ))}
         </ScrollView>
 
-        {/* BARANG PRELOVED */}
         <Text style={styles.sectionTitle}>Barang Preloved</Text>
 
         <View style={styles.productContainer}>
           {daftarBarang.map((barang) => (
             <Pressable key={barang.id} style={styles.productCard}>
-              {/* GAMBAR SEMENTARA */}
               <View style={styles.productImage}>
                 <Ionicons name="image-outline" size={42} color="#2E8B57" />
               </View>
 
-              {/* INFORMASI BARANG */}
               <View style={styles.productInfo}>
                 <Text style={styles.productName}>{barang.nama}</Text>
 
@@ -149,30 +144,25 @@ export default function Home() {
         </View>
       </ScrollView>
 
-      {/* BOTTOM NAVIGATION */}
       <View style={styles.bottomNavigation}>
-        {/* HOME */}
         <Pressable style={styles.navItem}>
           <Ionicons name="home" size={24} color="#2E8B57" />
 
           <Text style={styles.activeNavText}>Home</Text>
         </Pressable>
 
-        {/* CHAT */}
         <Pressable style={styles.navItem}>
           <Ionicons name="chatbubble-outline" size={24} color="#777" />
 
           <Text style={styles.navText}>Chat</Text>
         </Pressable>
 
-        {/* KERANJANG */}
         <Pressable style={styles.navItem}>
           <Ionicons name="cart-outline" size={24} color="#777" />
 
           <Text style={styles.navText}>Keranjang</Text>
         </Pressable>
 
-        {/* PROFILE */}
         <Pressable style={styles.navItem}>
           <Ionicons name="person-outline" size={24} color="#777" />
 
