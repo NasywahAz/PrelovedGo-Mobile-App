@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { styles } from "../constants/styles";
 
@@ -72,8 +72,19 @@ const formatHarga = (harga: number): string => {
 export default function Home() {
   const [kataKunci, setKataKunci] = useState("");
   const [kategoriAktif, setKategoriAktif] = useState("Semua");
+  const [barangTersedia, setBarangTersedia] = useState<Barang[]>([]);
 
-  const barangDitampilkan = daftarBarang.filter((barang) => {
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBarangTersedia(daftarBarang);
+      setIsLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const barangDitampilkan = barangTersedia.filter((barang) => {
     const cocokNama = barang.nama
       .toLowerCase()
       .includes(kataKunci.toLowerCase());
@@ -137,37 +148,45 @@ export default function Home() {
 
         <Text style={styles.sectionTitle}>Barang Preloved</Text>
 
-        <View style={styles.productContainer}>
-          {barangDitampilkan.map((barang) => (
-            <Pressable key={barang.id} style={styles.productCard}>
-              <View style={styles.productImage}>
-                <Ionicons name="image-outline" size={42} color="#2E8B57" />
-              </View>
-
-              <View style={styles.productInfo}>
-                <Text style={styles.productName}>{barang.nama}</Text>
-
-                <Text style={styles.condition}>Kondisi: {barang.kondisi}</Text>
-
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    color: "#2E8B57",
-                  }}
-                >
-                  {formatHarga(barang.harga)}
-                </Text>
-
-                <View style={styles.locationContainer}>
-                  <Ionicons name="location-outline" size={15} color="#777" />
-
-                  <Text style={styles.location}>{barang.lokasi}</Text>
+        {isLoading ? (
+          <Text>Memuat barang...</Text>
+        ) : barangDitampilkan.length === 0 ? (
+          <Text>Barang tidak ditemukan.</Text>
+        ) : (
+          <View style={styles.productContainer}>
+            {barangDitampilkan.map((barang) => (
+              <Pressable key={barang.id} style={styles.productCard}>
+                <View style={styles.productImage}>
+                  <Ionicons name="image-outline" size={42} color="#2E8B57" />
                 </View>
-              </View>
-            </Pressable>
-          ))}
-        </View>
+
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{barang.nama}</Text>
+
+                  <Text style={styles.condition}>
+                    Kondisi: {barang.kondisi}
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#2E8B57",
+                    }}
+                  >
+                    {formatHarga(barang.harga)}
+                  </Text>
+
+                  <View style={styles.locationContainer}>
+                    <Ionicons name="location-outline" size={15} color="#777" />
+
+                    <Text style={styles.location}>{barang.lokasi}</Text>
+                  </View>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        )}
       </ScrollView>
 
       <View style={styles.bottomNavigation}>
