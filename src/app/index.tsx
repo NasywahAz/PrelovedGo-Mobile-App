@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { styles } from "../constants/styles";
 
@@ -69,6 +70,20 @@ const formatHarga = (harga: number): string => {
 };
 
 export default function Home() {
+  const [kataKunci, setKataKunci] = useState("");
+  const [kategoriAktif, setKategoriAktif] = useState("Semua");
+
+  const barangDitampilkan = daftarBarang.filter((barang) => {
+    const cocokNama = barang.nama
+      .toLowerCase()
+      .includes(kataKunci.toLowerCase());
+
+    const cocokKategori =
+      kategoriAktif === "Semua" || barang.kategori === kategoriAktif;
+
+    return cocokNama && cocokKategori;
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -78,6 +93,8 @@ export default function Home() {
           placeholder="Cari barang preloved..."
           placeholderTextColor="#999"
           style={styles.searchInput}
+          value={kataKunci}
+          onChangeText={setKataKunci}
         />
       </View>
 
@@ -89,7 +106,16 @@ export default function Home() {
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {daftarKategori.map((kategori) => (
-            <Pressable key={kategori} style={styles.categoryCard}>
+            <Pressable
+              key={kategori}
+              style={[
+                styles.categoryCard,
+                kategoriAktif === kategori && {
+                  backgroundColor: "#D8F3E2",
+                },
+              ]}
+              onPress={() => setKategoriAktif(kategori)}
+            >
               <Ionicons
                 name={
                   kategori === "Elektronik"
@@ -112,7 +138,7 @@ export default function Home() {
         <Text style={styles.sectionTitle}>Barang Preloved</Text>
 
         <View style={styles.productContainer}>
-          {daftarBarang.map((barang) => (
+          {barangDitampilkan.map((barang) => (
             <Pressable key={barang.id} style={styles.productCard}>
               <View style={styles.productImage}>
                 <Ionicons name="image-outline" size={42} color="#2E8B57" />
